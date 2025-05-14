@@ -1,0 +1,30 @@
+p_001,MacBook Pro,1299.99,Electronics
+p_002,iPhone 13,799.99,Electronics
+p_003,Sony Headphones,199.99,Electronics
+p_004,Samsung TV,899.99,Electronics
+p_005,Wireless Mouse,29.99,Electronics
+p_006,Mechanical Keyboard,129.99,Electronics
+p_007,Smart Watch,249.99,Electronics
+p_008,Bluetooth Speaker,79.99,Electronics
+p_009,Office Chair,199.99,Furniture
+p_010,Bookshelf,149.99,Furniture
+p_011,Desk Lamp,39.99,Furniture
+p_012,Storage Cabinet,299.99,Furniture
+p_013,Computer Desk,179.99,Furniture
+p_014,Cotton T-Shirt,19.99,Clothing
+p_015,Denim Jeans,49.99,Clothing
+p_016,Winter Jacket,89.99,Clothing
+p_017,Running Shoes,79.99,Clothing
+p_018,Formal Shirt,39.99,Clothing
+p_019,Programming Book,49.99,Books
+p_020,Novel,14.99,Books
+p_021,Cookbook,24.99,Books
+p_022,Art Book,34.99,Books
+p_023,Yoga Mat,29.99,Sports
+p_024,Dumbbells Set,89.99,Sports
+p_025,Jump Rope,9.99,Sports
+p_026,Resistance Bands,19.99,Sports
+p_027,Coffee Maker,79.99,Home & Kitchen
+p_028,Blender,59.99,Home & Kitchen
+p_029,Toaster,39.99,Home & Kitchen
+p_030,Kitchen Knife Set,69.99,Home & Kitchen

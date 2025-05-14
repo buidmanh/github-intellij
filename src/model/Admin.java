@@ -3,15 +3,12 @@ package model;
 public class Admin extends User {
     /**
      * Constructs an admin object.
-     * @param userId Must be unique, format: u_10 digits, such as u_1234567890
-     * @param userName The user's name
-     * @param userPassword The user's password
-     * @param userRegisterTime Format: "DD-MM-YYYY_HH:MM:SS"
-     * @param userRole Default value: "admin"
+     * @param id Must be unique, format: u_10 digits, such as u_1234567890
+     * @param name The user's name
+     * @param password The user's password
      */
-    public Admin(String userId, String userName, String userPassword,
-                String userRegisterTime, String userRole) {
-        super(userId, userName, userPassword, userRegisterTime, userRole);
+    public Admin(String id, String name, String password) {
+        super(id, name, password, "admin");
     }
 
     /**
@@ -19,7 +16,7 @@ public class Admin extends User {
      */
     public Admin() {
         super();
-        setUserRole("admin");
+        setRole("admin");
     }
 
     /**
@@ -28,7 +25,7 @@ public class Admin extends User {
      */
     @Override
     public String toString() {
-        return String.format("{\"user_id\":\"%s\", \"user_name\":\"%s\", \"user_password\":\"%s\", \"user_register_time\":\"%s\", \"user_role\":\"%s\"}",
-                getUserId(), getUserName(), getUserPassword(), getUserRegisterTime(), getUserRole());
+        return String.format("Admin{id='%s', name='%s'}", 
+            getId(), getName());
     }
 } 

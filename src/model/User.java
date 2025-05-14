@@ -1,79 +1,68 @@
 package model;
 
-public abstract class User {
-    private String userId;
-    private String userName;
-    private String userPassword;
-    private String userRegisterTime;
-    private String userRole;
+import java.io.Serializable;
+
+public class User implements Serializable {
+    private String id;
+    private String name;
+    private String password;
+    private String role;
 
     /**
      * Constructs a user object.
-     * @param userId Must be unique, format: u_10 digits, such as u_1234567890
-     * @param userName The user's name
-     * @param userPassword The user's password
-     * @param userRegisterTime Format: "DD-MM-YYYY_HH:MM:SS"
-     * @param userRole Default value: "customer"
+     * @param id Must be unique, format: u_10 digits, such as u_1234567890
+     * @param name The user's name
+     * @param password The user's password
+     * @param role Default value: "customer"
      */
-    public User(String userId, String userName, String userPassword,
-                String userRegisterTime, String userRole) {
-        this.userId = userId;
-        this.userName = userName;
-        this.userPassword = userPassword;
-        this.userRegisterTime = userRegisterTime;
-        this.userRole = userRole;
+    public User(String id, String name, String password, String role) {
+        this.id = id;
+        this.name = name;
+        this.password = password;
+        this.role = role;
     }
 
     /**
      * Default constructor
      */
     public User() {
-        this.userId = "";
-        this.userName = "";
-        this.userPassword = "";
-        this.userRegisterTime = "";
-        this.userRole = "customer";
+        this.id = "";
+        this.name = "";
+        this.password = "";
+        this.role = "customer";
     }
 
     // Getters and Setters
-    public String getUserId() {
-        return userId;
+    public String getId() {
+        return id;
     }
 
-    public void setUserId(String userId) {
-        this.userId = userId;
+    public void setId(String id) {
+        this.id = id;
     }
 
-    public String getUserName() {
-        return userName;
+    public String getName() {
+        return name;
     }
 
-    public void setUserName(String userName) {
-        this.userName = userName;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public String getUserPassword() {
-        return userPassword;
+    public String getPassword() {
+        return password;
     }
 
-    public void setUserPassword(String userPassword) {
-        this.userPassword = userPassword;
+    public void setPassword(String password) {
+        this.password = password;
     }
 
-    public String getUserRegisterTime() {
-        return userRegisterTime;
+    public String getRole() {
+        return role;
     }
 
-    public void setUserRegisterTime(String userRegisterTime) {
-        this.userRegisterTime = userRegisterTime;
-    }
-
-    public String getUserRole() {
-        return userRole;
-    }
-
-    public void setUserRole(String userRole) {
-        this.userRole = userRole;
+    public void setRole(String role) {
+        this.role = role;
     }
 
     /**
@@ -82,7 +71,7 @@ public abstract class User {
      */
     @Override
     public String toString() {
-        return String.format("{\"user_id\":\"%s\", \"user_name\":\"%s\", \"user_password\":\"%s\", \"user_register_time\":\"%s\", \"user_role\":\"%s\"}",
-                userId, userName, userPassword, userRegisterTime, userRole);
+        return String.format("User{id='%s', name='%s', role='%s'}", 
+            id, name, role);
     }
 } 

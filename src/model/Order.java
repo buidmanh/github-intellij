@@ -8,6 +8,7 @@ public class Order implements Serializable {
     private String orderId;
     private String customerId;
     private String productId;
+    private double price;
     private LocalDateTime createTime;
 
     /**
@@ -15,13 +16,14 @@ public class Order implements Serializable {
      * @param orderId Must be a unique string, format is o_5 digits such as o_12345
      * @param customerId ID of the user who placed the order
      * @param productId ID of the product ordered
-     * @param createTime Format: "DD-MM-YYYY_HH:MM:SS"
+     * @param price Price of the product
      */
-    public Order(String orderId, String customerId, String productId, LocalDateTime createTime) {
+    public Order(String orderId, String customerId, String productId, double price) {
         this.orderId = orderId;
         this.customerId = customerId;
         this.productId = productId;
-        this.createTime = createTime;
+        this.price = price;
+        this.createTime = LocalDateTime.now();
     }
 
     /**
@@ -31,6 +33,7 @@ public class Order implements Serializable {
         this.orderId = "";
         this.customerId = "";
         this.productId = "";
+        this.price = 0.0;
         this.createTime = LocalDateTime.now();
     }
 
@@ -47,8 +50,12 @@ public class Order implements Serializable {
         return productId;
     }
 
-    public LocalDateTime getCreateTime() {
-        return createTime;
+    public double getPrice() {
+        return price;
+    }
+
+    public String getCreateTime() {
+        return createTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
     }
 
     public void setOrderId(String orderId) {
@@ -63,6 +70,10 @@ public class Order implements Serializable {
         this.productId = productId;
     }
 
+    public void setPrice(double price) {
+        this.price = price;
+    }
+
     public void setCreateTime(LocalDateTime createTime) {
         this.createTime = createTime;
     }
@@ -73,11 +84,7 @@ public class Order implements Serializable {
      */
     @Override
     public String toString() {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-        return String.format("%s,%s,%s,%s",
-            orderId,
-            customerId,
-            productId,
-            createTime.format(formatter));
+        return String.format("Order ID: %s, Customer ID: %s, Product ID: %s, Price: $%.2f, Time: %s",
+            orderId, customerId, productId, price, getCreateTime());
     }
 } 
