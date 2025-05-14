@@ -1,51 +1,68 @@
 package model;
 
-public class Customer extends User {
-    private String userEmail;
-    private String userMobile;
+import java.io.Serializable;
+
+public class Customer implements Serializable {
+    private String id;
+    private String name;
+    private String email;
+    private String password;
 
     /**
      * Constructs a customer object.
-     * @param userId Must be unique, format: u_10 digits, such as u_1234567890
-     * @param userName The user's name
-     * @param userPassword The user's password
-     * @param userRegisterTime Format: "DD-MM-YYYY_HH:MM:SS"
-     * @param userRole Default value: "customer"
-     * @param userEmail The customer's email address
-     * @param userMobile The customer's mobile number
+     * @param id Must be unique, format: u_10 digits, such as u_1234567890
+     * @param name The user's name
+     * @param email The customer's email address
+     * @param password The user's password
      */
-    public Customer(String userId, String userName, String userPassword,
-                   String userRegisterTime, String userRole,
-                   String userEmail, String userMobile) {
-        super(userId, userName, userPassword, userRegisterTime, userRole);
-        this.userEmail = userEmail;
-        this.userMobile = userMobile;
+    public Customer(String id, String name, String email, String password) {
+        this.id = id;
+        this.name = name;
+        this.email = email;
+        this.password = password;
     }
 
     /**
      * Default constructor
      */
     public Customer() {
-        super();
-        this.userEmail = "";
-        this.userMobile = "";
+        this.id = "";
+        this.name = "";
+        this.email = "";
+        this.password = "";
     }
 
     // Getters and Setters
-    public String getUserEmail() {
-        return userEmail;
+    public String getId() {
+        return id;
     }
 
-    public void setUserEmail(String userEmail) {
-        this.userEmail = userEmail;
+    public void setId(String id) {
+        this.id = id;
     }
 
-    public String getUserMobile() {
-        return userMobile;
+    public String getName() {
+        return name;
     }
 
-    public void setUserMobile(String userMobile) {
-        this.userMobile = userMobile;
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     /**
@@ -54,8 +71,7 @@ public class Customer extends User {
      */
     @Override
     public String toString() {
-        return String.format("{\"user_id\":\"%s\", \"user_name\":\"%s\", \"user_password\":\"%s\", \"user_register_time\":\"%s\", \"user_role\":\"%s\", \"user_email\":\"%s\", \"user_mobile\":\"%s\"}",
-                getUserId(), getUserName(), getUserPassword(), getUserRegisterTime(), getUserRole(),
-                userEmail, userMobile);
+        return String.format("Customer{id='%s', name='%s', email='%s'}", 
+            id, name, email);
     }
 } 

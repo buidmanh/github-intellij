@@ -1,116 +1,68 @@
 package model;
 
-public class Product {
-    private String proId;
-    private String proModel;
-    private String proCategory;
-    private String proName;
-    private double proCurrentPrice;
-    private double proRawPrice;
-    private double proDiscount;
-    private int proLikesCount;
+import java.io.Serializable;
+
+public class Product implements Serializable {
+    private String id;
+    private String name;
+    private double price;
+    private String category;
 
     /**
      * Constructs a product object.
-     * @param proId Product ID (must be unique)
-     * @param proModel Product model
-     * @param proCategory Product category
-     * @param proName Product name
-     * @param proCurrentPrice Current price of the product
-     * @param proRawPrice Original price of the product
-     * @param proDiscount Discount percentage
-     * @param proLikesCount Number of likes
+     * @param id Product ID (must be unique)
+     * @param name Product name
+     * @param price Current price of the product
+     * @param category Product category
      */
-    public Product(String proId, String proModel, String proCategory,
-                  String proName, double proCurrentPrice, double proRawPrice,
-                  double proDiscount, int proLikesCount) {
-        this.proId = proId;
-        this.proModel = proModel;
-        this.proCategory = proCategory;
-        this.proName = proName;
-        this.proCurrentPrice = proCurrentPrice;
-        this.proRawPrice = proRawPrice;
-        this.proDiscount = proDiscount;
-        this.proLikesCount = proLikesCount;
+    public Product(String id, String name, double price, String category) {
+        this.id = id;
+        this.name = name;
+        this.price = price;
+        this.category = category;
     }
 
     /**
      * Default constructor
      */
     public Product() {
-        this.proId = "";
-        this.proModel = "";
-        this.proCategory = "";
-        this.proName = "";
-        this.proCurrentPrice = 0.0;
-        this.proRawPrice = 0.0;
-        this.proDiscount = 0.0;
-        this.proLikesCount = 0;
+        this.id = "";
+        this.name = "";
+        this.price = 0.0;
+        this.category = "";
     }
 
     // Getters and Setters
-    public String getProId() {
-        return proId;
+    public String getId() {
+        return id;
     }
 
-    public void setProId(String proId) {
-        this.proId = proId;
+    public void setId(String id) {
+        this.id = id;
     }
 
-    public String getProModel() {
-        return proModel;
+    public String getName() {
+        return name;
     }
 
-    public void setProModel(String proModel) {
-        this.proModel = proModel;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public String getProCategory() {
-        return proCategory;
+    public double getPrice() {
+        return price;
     }
 
-    public void setProCategory(String proCategory) {
-        this.proCategory = proCategory;
+    public void setPrice(double price) {
+        this.price = price;
     }
 
-    public String getProName() {
-        return proName;
+    public String getCategory() {
+        return category;
     }
 
-    public void setProName(String proName) {
-        this.proName = proName;
-    }
-
-    public double getProCurrentPrice() {
-        return proCurrentPrice;
-    }
-
-    public void setProCurrentPrice(double proCurrentPrice) {
-        this.proCurrentPrice = proCurrentPrice;
-    }
-
-    public double getProRawPrice() {
-        return proRawPrice;
-    }
-
-    public void setProRawPrice(double proRawPrice) {
-        this.proRawPrice = proRawPrice;
-    }
-
-    public double getProDiscount() {
-        return proDiscount;
-    }
-
-    public void setProDiscount(double proDiscount) {
-        this.proDiscount = proDiscount;
-    }
-
-    public int getProLikesCount() {
-        return proLikesCount;
-    }
-
-    public void setProLikesCount(int proLikesCount) {
-        this.proLikesCount = proLikesCount;
+    public void setCategory(String category) {
+        this.category = category;
     }
 
     /**
@@ -119,7 +71,7 @@ public class Product {
      */
     @Override
     public String toString() {
-        return String.format("{\"pro_id\":\"%s\", \"pro_model\":\"%s\", \"pro_category\":\"%s\", \"pro_name\":\"%s\", \"pro_current_price\":\"%.2f\", \"pro_raw_price\":\"%.2f\", \"pro_discount\":\"%.2f\", \"pro_likes_count\":\"%d\"}",
-                proId, proModel, proCategory, proName, proCurrentPrice, proRawPrice, proDiscount, proLikesCount);
+        return String.format("Product{id='%s', name='%s', price=%.2f, category='%s'}", 
+            id, name, price, category);
     }
 } 
