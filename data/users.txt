@@ -1,0 +1,4 @@
+admin,admin,admin123,admin
+u_1813626030,,,customer,admin@admin.com
+u_1033984888,manhbui,manh123,customer,manh@manh.com
+u_1013078526,0,,customer,

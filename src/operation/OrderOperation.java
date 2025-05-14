@@ -1,6 +1,7 @@
 package operation;
 
 import model.Order;
+import model.Product;
 import java.io.*;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -13,10 +14,12 @@ public class OrderOperation {
     private static final String ORDERS_FILE = "data/orders.txt";
     private static final int ITEMS_PER_PAGE = 10;
     private List<Order> orders;
+    private final ProductOperation productOperation;
     private Set<String> usedOrderIds;
 
     private OrderOperation() {
         orders = new ArrayList<>();
+        productOperation = ProductOperation.getInstance();
         usedOrderIds = new HashSet<>();
         loadOrders();
     }
@@ -28,32 +31,34 @@ public class OrderOperation {
         return instance;
     }
 
-    public String generateUniqueOrderId() {
+    private String generateUniqueOrderId() {
+        Set<String> existingIds = orders.stream()
+                .map(Order::getOrderId)
+                .collect(Collectors.toSet());
+                
         String orderId;
         do {
-            int number = ThreadLocalRandom.current().nextInt(10000, 100000);
-            orderId = String.format("o_%05d", number);
-        } while (usedOrderIds.contains(orderId));
+            int number = ThreadLocalRandom.current().nextInt(1000000000, 2000000000);
+            orderId = String.format("o_%010d", number);
+        } while (existingIds.contains(orderId));
         
-        usedOrderIds.add(orderId);
         return orderId;
     }
 
-    public boolean createAnOrder(String customerId, String productId, String createTime) {
-        try {
-            LocalDateTime orderTime = createTime != null 
-                ? LocalDateTime.parse(createTime, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))
-                : LocalDateTime.now();
-            
-            String orderId = generateUniqueOrderId();
-            Order order = new Order(orderId, customerId, productId, orderTime);
-            orders.add(order);
-            saveOrders();
-            return true;
-        } catch (Exception e) {
-            e.printStackTrace();
+    public boolean createOrder(String customerId, String productId) {
+        Product product = productOperation.getProductById(productId);
+        if (product == null) {
             return false;
         }
+
+        // Generate unique order ID
+        final String orderId = generateUniqueOrderId();
+
+        // Create and save order
+        Order order = new Order(orderId, customerId, productId, product.getPrice());
+        orders.add(order);
+        saveOrders();
+        return true;
     }
 
     public boolean deleteOrder(String orderId) {
@@ -66,16 +71,21 @@ public class OrderOperation {
     }
 
     public OrderListResult getOrderList(String customerId, int pageNumber) {
-        List<Order> customerOrders = orders.stream()
-                .filter(o -> o.getCustomerId().equals(customerId))
-                .collect(Collectors.toList());
+        List<Order> filteredOrders;
+        if (customerId != null && !customerId.isEmpty()) {
+            filteredOrders = orders.stream()
+                    .filter(o -> o.getCustomerId().equals(customerId))
+                    .collect(Collectors.toList());
+        } else {
+            filteredOrders = new ArrayList<>(orders);
+        }
 
         int startIndex = (pageNumber - 1) * ITEMS_PER_PAGE;
-        int endIndex = Math.min(startIndex + ITEMS_PER_PAGE, customerOrders.size());
-        int totalPages = (int) Math.ceil((double) customerOrders.size() / ITEMS_PER_PAGE);
+        int endIndex = Math.min(startIndex + ITEMS_PER_PAGE, filteredOrders.size());
+        int totalPages = (int) Math.ceil((double) filteredOrders.size() / ITEMS_PER_PAGE);
 
-        List<Order> pageOrders = startIndex < customerOrders.size() 
-            ? customerOrders.subList(startIndex, endIndex)
+        List<Order> pageOrders = startIndex < filteredOrders.size() 
+            ? filteredOrders.subList(startIndex, endIndex)
             : new ArrayList<>();
 
         return new OrderListResult(pageOrders, pageNumber, totalPages);
@@ -106,7 +116,7 @@ public class OrderOperation {
                 LocalDateTime orderTime = LocalDateTime.of(year, month, day, hour, minute);
                 String createTime = orderTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
                 
-                createAnOrder(customerId, productId, createTime);
+                createOrder(customerId, productId);
             }
         }
     }
@@ -154,12 +164,27 @@ public class OrderOperation {
             while ((line = reader.readLine()) != null) {
                 String[] parts = line.split(",");
                 if (parts.length >= 4) {
-                    Order order = new Order(
-                        parts[0], // orderId
-                        parts[1], // customerId
-                        parts[2], // productId
-                        LocalDateTime.parse(parts[3], formatter) // createTime
-                    );
+                    String orderId = parts[0];
+                    String customerId = parts[1];
+                    String productId = parts[2];
+                    double price = 0.0;
+                    LocalDateTime createTime = LocalDateTime.now();
+                    try {
+                        // Try to parse price as a double
+                        price = Double.parseDouble(parts[3]);
+                        // If there is a 5th part, try to parse createTime
+                        if (parts.length >= 5) {
+                            createTime = LocalDateTime.parse(parts[4], formatter);
+                        }
+                    } catch (NumberFormatException e) {
+                        // If not a double, treat as createTime and try to parse price from 5th part
+                        createTime = LocalDateTime.parse(parts[3], formatter);
+                        if (parts.length >= 5) {
+                            price = Double.parseDouble(parts[4]);
+                        }
+                    }
+                    Order order = new Order(orderId, customerId, productId, price);
+                    order.setCreateTime(createTime);
                     orders.add(order);
                     usedOrderIds.add(order.getOrderId());
                 }
@@ -174,7 +199,11 @@ public class OrderOperation {
     private void saveOrders() {
         try (PrintWriter writer = new PrintWriter(new FileWriter(ORDERS_FILE))) {
             for (Order order : orders) {
-                writer.println(order.toString());
+                writer.println(String.format("%s,%s,%s,%.2f",
+                    order.getOrderId(),
+                    order.getCustomerId(),
+                    order.getProductId(),
+                    order.getPrice()));
             }
         } catch (IOException e) {
             e.printStackTrace();
