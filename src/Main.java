@@ -161,10 +161,20 @@ public class Main {
             return;
         }
 
-        String[] input = io.getUserInput("Enter your email: ", 1);
-        String email = input[0];
+        // Get email and phone number
+        String email = io.getSingleInput("Enter your email: ");
+        if (email == null || email.trim().isEmpty()) {
+            io.printErrorMessage("Registration", "Email is required.");
+            return;
+        }
+
+        String phoneNumber = io.getSingleInput("Enter your phone number: ");
+        if (phoneNumber == null || phoneNumber.trim().isEmpty()) {
+            io.printErrorMessage("Registration", "Phone number is required.");
+            return;
+        }
         
-        if (userOperation.register(username, password, email)) {
+        if (userOperation.register(username, password, email, phoneNumber)) {
             io.printMessage("Registration successful! Please login.");
         } else {
             io.printErrorMessage("Registration", "Registration failed. Username might already exist.");
@@ -279,11 +289,39 @@ public class Main {
     }
 
     private static void addCustomer() {
-        String[] input = io.getUserInput("Enter username, password, and email: ", 3);
-        if (userOperation.register(input[0], input[1], input[2])) {
+        // Get username
+        String username = io.getSingleInput("Enter username: ");
+        if (!userOperation.validateUsername(username)) {
+            io.printErrorMessage("Add Customer", "Username must be at least 5 characters long and contain only letters and underscores.");
+            return;
+        }
+
+        // Get password
+        String password = io.getSingleInput("Enter password: ");
+        if (!userOperation.validatePassword(password)) {
+            io.printErrorMessage("Add Customer", "Password must be at least 5 characters long and contain both letters and numbers.");
+            return;
+        }
+
+        // Get email
+        String email = io.getSingleInput("Enter email: ");
+        if (email == null || email.trim().isEmpty()) {
+            io.printErrorMessage("Add Customer", "Email is required.");
+            return;
+        }
+
+        // Get phone number
+        String phoneNumber = io.getSingleInput("Enter phone number: ");
+        if (phoneNumber == null || phoneNumber.trim().isEmpty()) {
+            io.printErrorMessage("Add Customer", "Phone number is required.");
+            return;
+        }
+
+        // Register the customer
+        if (userOperation.register(username, password, email, phoneNumber)) {
             io.printMessage("Customer added successfully!");
         } else {
-            io.printErrorMessage("Add Customer", "Failed to add customer.");
+            io.printErrorMessage("Add Customer", "Failed to add customer. Username might already exist.");
         }
     }
 
@@ -297,9 +335,20 @@ public class Main {
                 Math.min(page * 10, customers.size())
             );
             
-            io.showList("admin", "customer", pageCustomers, page, totalPages);
+            io.printMessage("\n=== Customer List (Page " + page + " of " + totalPages + ") ===");
+            io.printMessage("Username | Encrypted Password | Role | Phone Number | Email");
+            io.printMessage("------------------------------------------------------------");
             
-            String[] input = io.getUserInput("Enter page number (0 to return): ", 1);
+            for (Customer customer : pageCustomers) {
+                io.printMessage(String.format("%-8s | %-18s | %-4s | %-12s | %s",
+                    customer.getName(),
+                    customer.getPassword(),
+                    customer.getRole(),
+                    customer.getPhoneNumber(),
+                    customer.getEmail()));
+            }
+            
+            String[] input = io.getUserInput("\nEnter page number (0 to return): ", 1);
             try {
                 page = Integer.parseInt(input[0]);
                 if (page == 0) return;

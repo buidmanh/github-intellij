@@ -100,25 +100,59 @@ public class UserOperation {
                 .orElse(null);
     }
 
-    public boolean register(String username, String password, String email) {
-        // Check if username already exists
-        if (users.stream().anyMatch(u -> u.getName().equals(username))) {
-            return false;
-        }
+    private User getUserByUsername(String username) {
+        return users.stream()
+                .filter(u -> u.getName().equals(username))
+                .findFirst()
+                .orElse(null);
+    }
 
-        // Generate unique user ID
+    private String generateUserId() {
         String userId;
         do {
             int number = ThreadLocalRandom.current().nextInt(1000000000, 2000000000);
             userId = String.format("u_%010d", number);
         } while (usedUserIds.contains(userId));
+        return userId;
+    }
+
+    public boolean register(String username, String password, String email, String phoneNumber) {
+        // Check if username already exists
+        if (getUserByUsername(username) != null) {
+            return false;
+        }
+
+        // Generate user ID
+        String userId = generateUserId();
 
         // Create new customer
-        Customer customer = new Customer(userId, username, password, email);
+        Customer customer = new Customer(userId, username, password, email, phoneNumber);
+
+        // Add to user list
         users.add(customer);
         usedUserIds.add(userId);
-        saveUsers();
-        return true;
+
+        // Save to file
+        return saveUsers();
+    }
+
+    private String encryptPassword(String password) {
+        // Simple encryption for demonstration
+        // In a real application, use a proper encryption algorithm
+        StringBuilder encrypted = new StringBuilder();
+        for (char c : password.toCharArray()) {
+            encrypted.append((char) (c + 3)); // Simple Caesar cipher
+        }
+        return encrypted.toString();
+    }
+
+    private String decryptPassword(String encrypted) {
+        // Simple decryption for demonstration
+        StringBuilder decrypted = new StringBuilder();
+        for (char c : encrypted.toCharArray()) {
+            decrypted.append((char) (c - 3)); // Reverse Caesar cipher
+        }
+        return decrypted.toString();
     }
 
     public void addUser(User user) {
@@ -141,6 +175,33 @@ public class UserOperation {
                 .collect(Collectors.toList());
     }
 
+    private boolean saveUsers() {
+        try (PrintWriter writer = new PrintWriter(new FileWriter(USERS_FILE))) {
+            for (User user : users) {
+                if (user instanceof Customer) {
+                    Customer customer = (Customer) user;
+                    writer.println(String.format("%s,%s,%s,%s,%s,%s",
+                        user.getId(),
+                        user.getName(),
+                        user.getPassword(),
+                        user.getRole(),
+                        customer.getEmail(),
+                        customer.getPhoneNumber()));
+                } else {
+                    writer.println(String.format("%s,%s,%s,%s",
+                        user.getId(),
+                        user.getName(),
+                        user.getPassword(),
+                        user.getRole()));
+                }
+            }
+            return true;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
     private void loadUsers() {
         try (BufferedReader reader = new BufferedReader(new FileReader(USERS_FILE))) {
             String line;
@@ -151,9 +212,9 @@ public class UserOperation {
                     if (parts[3].equals("admin")) {
                         user = new Admin(parts[0], parts[1], parts[2]);
                     } else {
-                        // For customers, we need the email field
-                        if (parts.length >= 5) {
-                            user = new Customer(parts[0], parts[1], parts[2], parts[4]);
+                        // For customers, we need the email and phone fields
+                        if (parts.length >= 6) {
+                            user = new Customer(parts[0], parts[1], parts[2], parts[4], parts[5]);
                         } else {
                             // Skip invalid customer entries
                             continue;
@@ -167,30 +228,6 @@ public class UserOperation {
             // File might not exist yet, which is okay
             users = new ArrayList<>();
             usedUserIds = new HashSet<>();
-        }
-    }
-
-    private void saveUsers() {
-        try (PrintWriter writer = new PrintWriter(new FileWriter(USERS_FILE))) {
-            for (User user : users) {
-                if (user instanceof Customer) {
-                    Customer customer = (Customer) user;
-                    writer.println(String.format("%s,%s,%s,%s,%s",
-                        user.getId(),
-                        user.getName(),
-                        user.getPassword(),
-                        user.getRole(),
-                        customer.getEmail()));
-                } else {
-                    writer.println(String.format("%s,%s,%s,%s",
-                        user.getId(),
-                        user.getName(),
-                        user.getPassword(),
-                        user.getRole()));
-                }
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
         }
     }
 } 

@@ -4,6 +4,7 @@ import java.io.Serializable;
 
 public class Customer extends User implements Serializable {
     private String email;
+    private String phoneNumber;
 
     /**
      * Constructs a customer object.
@@ -11,10 +12,12 @@ public class Customer extends User implements Serializable {
      * @param name The user's name
      * @param password The user's password
      * @param email The customer's email address
+     * @param phoneNumber The customer's phone number
      */
-    public Customer(String id, String name, String password, String email) {
+    public Customer(String id, String name, String password, String email, String phoneNumber) {
         super(id, name, password, "customer");
         this.email = email;
+        this.phoneNumber = phoneNumber;
     }
 
     /**
@@ -24,6 +27,7 @@ public class Customer extends User implements Serializable {
         super();
         setRole("customer");
         this.email = "";
+        this.phoneNumber = "";
     }
 
     // Getters and Setters
@@ -35,13 +39,21 @@ public class Customer extends User implements Serializable {
         this.email = email;
     }
 
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
+
     /**
      * Returns the customer information as a formatted string.
      * @return String in JSON-like format
      */
     @Override
     public String toString() {
-        return String.format("Customer{id='%s', name='%s', email='%s'}", 
-            getId(), getName(), email);
+        return String.format("Customer{id='%s', name='%s', email='%s', phone='%s', password='%s', role='%s'}", 
+            getId(), getName(), email, phoneNumber, getPassword(), getRole());
     }
 } 

@@ -47,10 +47,11 @@ public class CustomerOperation {
      * @param username Customer's username
      * @param password Customer's password
      * @param email Customer's email
+     * @param phoneNumber Customer's phone number
      * @return true if success, false if failure
      */
-    public boolean registerCustomer(String username, String password, String email) {
-        return userOperation.register(username, password, email);
+    public boolean register(String username, String password, String email, String phoneNumber) {
+        return userOperation.register(username, password, email, phoneNumber);
     }
 
     /**

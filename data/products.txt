@@ -28,3 +28,4 @@ p_027,Coffee Maker,79.99,Home & Kitchen
 p_028,Blender,59.99,Home & Kitchen
 p_029,Toaster,39.99,Home & Kitchen
 p_030,Kitchen Knife Set,69.99,Home & Kitchen
+p_0261436672,lenovo legion 5,1000.00,Electronics
