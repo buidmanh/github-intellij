@@ -79,6 +79,12 @@ public class CustomerOperation {
                 isValid = validateEmail(value);
                 if (isValid) customerObject.setEmail(value);
                 break;
+            case "phone":
+                if (value != null && !value.trim().isEmpty()) {
+                    customerObject.setPhoneNumber(value);
+                    isValid = true;
+                }
+                break;
             default:
                 return false;
         }

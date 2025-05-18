@@ -1,2 +1,3 @@
 admin,admin,admin123,admin
 u_1087014194,manhbui,manhbui123,customer,manh@m.com,0909111222
+u_1863364610,quanbui,quan123,customer,quan@quan.com,090102232323

@@ -342,7 +342,7 @@ public class Main {
             for (Customer customer : pageCustomers) {
                 io.printMessage(String.format("%-8s | %-18s | %-4s | %-12s | %s",
                     customer.getName(),
-                    customer.getPassword(),
+                    userOperation.getEncryptedPassword(customer.getPassword()),
                     customer.getRole(),
                     customer.getPhoneNumber(),
                     customer.getEmail()));

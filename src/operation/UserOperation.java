@@ -136,23 +136,13 @@ public class UserOperation {
         return saveUsers();
     }
 
-    private String encryptPassword(String password) {
-        // Simple encryption for demonstration
-        // In a real application, use a proper encryption algorithm
+    // This method is only used for displaying encrypted passwords
+    public String getEncryptedPassword(String password) {
         StringBuilder encrypted = new StringBuilder();
         for (char c : password.toCharArray()) {
             encrypted.append((char) (c + 3)); // Simple Caesar cipher
         }
         return encrypted.toString();
-    }
-
-    private String decryptPassword(String encrypted) {
-        // Simple decryption for demonstration
-        StringBuilder decrypted = new StringBuilder();
-        for (char c : encrypted.toCharArray()) {
-            decrypted.append((char) (c - 3)); // Reverse Caesar cipher
-        }
-        return decrypted.toString();
     }
 
     public void addUser(User user) {
